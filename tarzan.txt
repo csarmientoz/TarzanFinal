@@ -1,0 +1,8 @@
+Ana;52
+Cristian;11
+Lina;60
+x;63
+Jefferson;62
+;63
+usuario;63
+null;63

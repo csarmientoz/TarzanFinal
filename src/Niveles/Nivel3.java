@@ -4,6 +4,8 @@ import Juegoclase.Banana;
 import Juegoclase.Enemigos;
 import Juegoclase.Tarzan;
 import Menu.PasarAlNivel2;
+import dao.Archivo;
+import dao.Estadistica;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
@@ -18,6 +20,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.logging.Level;
@@ -25,6 +28,7 @@ import java.util.logging.Logger;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
@@ -53,11 +57,11 @@ public class Nivel3 extends JPanel implements ActionListener, MouseListener {
     private ArrayList<Banana> bananas = new ArrayList<>();
     private ArrayList<Integer> ban = rectangulosBananas();
     private boolean gameIsFinished = false;
-    private int toques=0;
-    Image gameover= loadImage("YouLose_LI.jpg");
-    
-    
-    public Nivel3() {
+    private int toques = 0;
+    Image gameover = loadImage("YouLose_LI.jpg");
+    private boolean puntajeSalvado;
+
+    public Nivel3(int puntaje) {
         this.addMouseListener(this);
         addKeyListener(new TAdapter());
         setFocusable(true);
@@ -65,6 +69,8 @@ public class Nivel3 extends JPanel implements ActionListener, MouseListener {
         timer.start();
         rectangulosBananas();
         agregar();
+        this.contador=puntaje;
+        t.setContadorBananas(this.contador);
     }
 
     public ArrayList rectangulosBananas() {
@@ -78,15 +84,14 @@ public class Nivel3 extends JPanel implements ActionListener, MouseListener {
         for (int i = 0; i < 70; i++) {
             if (i < 40) {
                 bananas.add(new Banana(x + ban.get(i) * 2, 450));
-                insectos.add(new Enemigos(x + insect.get(i)*3, 450));
+                insectos.add(new Enemigos(x + insect.get(i) * 3, 450));
 
             } else if (i < 70) {
                 bananas.add(new Banana(x + ban.get(i) * 2, 300));
-                insectos.add(new Enemigos(x + insect.get(i)*3, 280));
+                insectos.add(new Enemigos(x + insect.get(i) * 3, 280));
             }
         }
     }
-    
 
     @Override
     protected void paintComponent(Graphics g) {
@@ -114,17 +119,17 @@ public class Nivel3 extends JPanel implements ActionListener, MouseListener {
 
         for (int i = 0; i < 70; i++) {
             g.drawImage(banana, bananas.get(i).getX(), bananas.get(i).getY(), 40, 60, this);
-                g.drawImage(insecto, insectos.get(i).getX(), insectos.get(i).getY(), insectos.get(i).getX() 
-                        + 50, insectos.get(i).getY() + 80, (this.secuencia2 * 125), 0, (this.secuencia2 * 125) + 125, 
-                        128, this);
+            g.drawImage(insecto, insectos.get(i).getX(), insectos.get(i).getY(), insectos.get(i).getX()
+                    + 50, insectos.get(i).getY() + 80, (this.secuencia2 * 125), 0, (this.secuencia2 * 125) + 125,
+                    128, this);
         }
         g.setColor(Color.BLACK);
         g.fillRect(810, 10, 120, 50);
         g.setColor(Color.WHITE);
-        Font MiFuente= new Font("Courrier New", 1, 20);
+        Font MiFuente = new Font("Courrier New", 1, 20);
         g.setFont(MiFuente);
         g.drawString("Puntaje: " + t.getContadorBananas(), 820, 40);
-        
+
         g.setColor(Color.BLACK);
         g.fillRect(410, 10, 120, 50);
         g.setColor(Color.WHITE);
@@ -132,46 +137,58 @@ public class Nivel3 extends JPanel implements ActionListener, MouseListener {
 
         if (t.getY() == 400 && direccion == true) {
             g.drawImage(personaje, t.getX(), t.getY(), t.getX() + 120, t.getY() + 170, (this.secuencia * 270), 0, (this.secuencia * 270) + 270, 520, this);
-        }  
-        if (t.getY() < 400 && direccion==true) {
+        }
+        if (t.getY() < 400 && direccion == true) {
             g.drawImage(salto, t.getX(), t.getY(), t.getX() + 140, t.getY() + 190, (this.secuencia * 360), 0, (this.secuencia * 360) + 360, 860, this);
         }
-        if (t.getY()==400 && direccion == false) {
+        if (t.getY() == 400 && direccion == false) {
             g.drawImage(personaje, t.getX(), t.getY(), t.getX() + 120, t.getY() + 170, (this.secuenciaAtras * 270), 0, (this.secuenciaAtras * 270) - 270, 520, this);
         }
-        if (t.getY() < 400 && direccion==false) {
+        if (t.getY() < 400 && direccion == false) {
             g.drawImage(salto, t.getX(), t.getY(), t.getX() + 140, t.getY() + 190, (this.secuenciaAtras * 360), 0, (this.secuenciaAtras * 360) - 360, 860, this);
         }
 
         for (int i = 0; i < bananas.size(); i++) {
             if (bananas.get(i).CogerBananas(t) == true) {
-                t.setContadorBananas(t.getContadorBananas() +1);
+                t.setContadorBananas(t.getContadorBananas() + 1);
                 if (i < 40) {
                     bananas.remove(i);
                     bananas.add(new Banana(x + ban.get(i) * 2, 300));
-                } if (i >= 40) {
+                }
+                if (i >= 40) {
                     bananas.remove(i);
                     bananas.add(new Banana(x + ban.get(i) * 2, 450));
                 }
             }
         }
         for (int i = 0; i < insectos.size(); i++) {
-               
-            if (insectos.get(i).tocarEnemigo(t) == true ) {
-                t.setVidas(t.getVidas()-1);
-             
+
+            if (insectos.get(i).tocarEnemigo(t) == true) {
+                t.setVidas(t.getVidas() - 1);
+
             }
-            if(t.getVidas()==0){
+            if (t.getVidas() == 0) {
                 this.gameIsFinished = true;
-                
+                if (this.puntajeSalvado != true) {
+                    Archivo archivo = new Archivo();
+                    String nombreJugador = JOptionPane.showInputDialog("Ingrese nombre del jugador");
+                    Estadistica estadistica = new Estadistica();
+                    estadistica.setJugador(nombreJugador);
+                    estadistica.setPuntje(t.getContadorBananas());
+                    try {
+                        archivo.escribir(estadistica);
+                        this.puntajeSalvado = true;
+                    } catch (FileNotFoundException ex) {
+                        Logger.getLogger(Nivel1.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
             }
         }
-        if(t.getContadorBananas()>63){
-                timer.stop();
-                
-            }
+        if (t.getContadorBananas() > 63) {
+            timer.stop();
 
-            
+        }
+
     }
 
     public void endGame(Graphics g) {
@@ -181,7 +198,7 @@ public class Nivel3 extends JPanel implements ActionListener, MouseListener {
             g.drawImage(personajeCaido, t.getX(), t.getY(), t.getX() + 50, t.getY() + 170, (this.secuencia * 270), 0, (this.secuencia * 270) + 100, 520, this);
         } else {
             g.drawImage(personajeDormido, t.getX(), t.getY(), 170, 160, this);
-            
+
             this.timer.stop();
             g.drawImage(gameover, 200, 0, this);
         }
@@ -216,10 +233,10 @@ public class Nivel3 extends JPanel implements ActionListener, MouseListener {
         } else {
             this.secuencia++;
         }
-        
-        if(this.secuencia2==2){
-            this.secuencia2=0;
-        }else{
+
+        if (this.secuencia2 == 2) {
+            this.secuencia2 = 0;
+        } else {
             this.secuencia2++;
         }
         repaint();
@@ -230,38 +247,40 @@ public class Nivel3 extends JPanel implements ActionListener, MouseListener {
         public void keyReleased(KeyEvent e) {
             int key = e.getKeyCode();
             if (key == KeyEvent.VK_UP) {
-                if(direccion ==true){
-                for (int i = 0; t.getY() < 280; i++) {
-                    t.setY(t.getY() + 1);
-                    t.setX(t.getX() + 2);
+                if (direccion == true) {
+                    for (int i = 0; t.getY() < 280; i++) {
+                        t.setY(t.getY() + 1);
+                        t.setX(t.getX() + 2);
+                    }
+                    for (int i = 0; t.getY() < 320; i++) {
+                        t.setY(t.getY() + 1);
+                        t.setX(t.getX() + 1);
+                    }
+                    for (int i = 0; t.getY() < 400; i++) {
+                        t.setY(t.getY() + 2);
+                        t.setX(t.getX() + 1);
+                    }
                 }
-                for (int i = 0; t.getY() < 320; i++) {
-                    t.setY(t.getY() + 1);
-                    t.setX(t.getX() + 1);
+                if (direccion == false) {
+                    for (int i = 0; t.getY() < 280; i++) {
+                        t.setY(t.getY() + 1);
+                        t.setX(t.getX() - 2);
+                    }
+                    for (int i = 0; t.getY() < 320; i++) {
+                        t.setY(t.getY() + 1);
+                        t.setX(t.getX() - 1);
+                    }
+                    for (int i = 0; t.getY() < 400; i++) {
+                        t.setY(t.getY() + 2);
+                        t.setX(t.getX() - 1);
+                    }
                 }
-                for (int i = 0; t.getY() < 400; i++) {
-                    t.setY(t.getY() + 2);
-                    t.setX(t.getX() + 1);
-                }}
-                if(direccion ==false){
-                for (int i = 0; t.getY() < 280; i++) {
-                    t.setY(t.getY() + 1);
-                    t.setX(t.getX() - 2);
-                }
-                for (int i = 0; t.getY() < 320; i++) {
-                    t.setY(t.getY() + 1);
-                    t.setX(t.getX() - 1);
-                }
-                for (int i = 0; t.getY() < 400; i++) {
-                    t.setY(t.getY() + 2);
-                    t.setX(t.getX() - 1);
-                }}
             }
         }
 
         public void keyPressed(KeyEvent e) {
             int key = e.getKeyCode();
-            
+
             if (key == KeyEvent.VK_LEFT) {
                 direccion = false;
                 t.setX(t.getX() - 5);
@@ -271,32 +290,34 @@ public class Nivel3 extends JPanel implements ActionListener, MouseListener {
                 t.setX(t.getX() + 5);
             }
             if (key == KeyEvent.VK_UP) {
-                if(direccion==true){
-                for (int i = 0; t.getY() > 320; i++) {
-                    t.setY(t.getY() - 2);
-                    t.setX(t.getX() + 1);
+                if (direccion == true) {
+                    for (int i = 0; t.getY() > 320; i++) {
+                        t.setY(t.getY() - 2);
+                        t.setX(t.getX() + 1);
+                    }
+                    for (int i = 0; t.getY() > 280; i++) {
+                        t.setY(t.getY() - 1);
+                        t.setX(t.getX() + 1);
+                    }
+                    for (int i = 0; t.getY() > 250; i++) {
+                        t.setY(t.getY() - 1);
+                        t.setX(t.getX() + 2);
+                    }
                 }
-                for (int i = 0; t.getY() > 280; i++) {
-                    t.setY(t.getY() - 1);
-                    t.setX(t.getX() + 1);
+                if (direccion == false) {
+                    for (int i = 0; t.getY() > 320; i++) {
+                        t.setY(t.getY() - 2);
+                        t.setX(t.getX() - 1);
+                    }
+                    for (int i = 0; t.getY() > 280; i++) {
+                        t.setY(t.getY() - 1);
+                        t.setX(t.getX() - 1);
+                    }
+                    for (int i = 0; t.getY() > 250; i++) {
+                        t.setY(t.getY() - 1);
+                        t.setX(t.getX() - 2);
+                    }
                 }
-                for (int i = 0; t.getY() > 250; i++) {
-                    t.setY(t.getY() - 1);
-                    t.setX(t.getX() + 2);
-                }}
-                if(direccion==false){
-                for (int i = 0; t.getY() > 320; i++) {
-                    t.setY(t.getY() - 2);
-                    t.setX(t.getX() - 1);
-                }
-                for (int i = 0; t.getY() > 280; i++) {
-                    t.setY(t.getY() - 1);
-                    t.setX(t.getX() - 1);
-                }
-                for (int i = 0; t.getY() > 250; i++) {
-                    t.setY(t.getY() - 1);
-                    t.setX(t.getX() - 2);
-                }}
 
             }
 

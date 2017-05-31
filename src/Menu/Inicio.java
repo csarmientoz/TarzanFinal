@@ -77,7 +77,6 @@ public class Inicio extends javax.swing.JFrame {
         setLocation(new java.awt.Point(500, 400));
         setMinimumSize(new java.awt.Dimension(1000, 600));
         setName("InicioJuego"); // NOI18N
-        setPreferredSize(new java.awt.Dimension(1000, 600));
 
         jButton1.setText("Iniciar juego");
         jButton1.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -92,6 +91,16 @@ public class Inicio extends javax.swing.JFrame {
         });
 
         jButton2.setText("Puntajes");
+        jButton2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton2MouseClicked(evt);
+            }
+        });
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         jButton3.setText("Salir");
         jButton3.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -134,17 +143,17 @@ public class Inicio extends javax.swing.JFrame {
 
     private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
         System.out.println("Primer Nivel");
-        TestPaintComponent1 frame= new TestPaintComponent1();
+        TestPaintComponent1 frame = new TestPaintComponent1();
         frame.setTitle("Tarzan Adventure: Nivel 1");
-        frame.setSize(1000 , 600);
+        frame.setSize(1000, 600);
         frame.setLocationRelativeTo(null); //Center the frame
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.setVisible(true);
         
     }//GEN-LAST:event_jButton1MouseClicked
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-               
+        
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
@@ -152,14 +161,28 @@ public class Inicio extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton3MouseClicked
-        
+        this.dispose();
     }//GEN-LAST:event_jButton3MouseClicked
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton2MouseClicked
+        // TODO add your handling code here:
+           PaintScore frame = new PaintScore();
+        frame.setTitle("Tarzan Adventure: Puntaje");
+        frame.setSize(400, 600);
+        frame.setLocationRelativeTo(null); //Center the frame
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.setVisible(true);
+    }//GEN-LAST:event_jButton2MouseClicked
 
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        
+
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 

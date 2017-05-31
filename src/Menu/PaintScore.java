@@ -3,18 +3,18 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Niveles;
+package Menu;
 
 import javax.swing.JFrame;
 
 /**
  *
- * @author TOSHIBA
+ * @author Visitor
  */
-public class TestPaintComponent3 extends JFrame{
+public class PaintScore  extends JFrame{
 
-    public TestPaintComponent3(int puntaje) {
-        add(new Nivel3(puntaje));
+    public PaintScore() {
+        add(new Puntuacion());
     }
-
-    }
+    
+}
